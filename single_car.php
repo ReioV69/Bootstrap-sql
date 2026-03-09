@@ -4,11 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Auto d</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"></head>
 <body class="bg-light">
 
 <!-- NAVBAR -->
+ 
   <nav class="navbar navbar-expand-lg bg-body-tertiary  border-bottom">
   <div class="container">
     <a class="navbar-brand fw-bold" href="#">Autorent</a>
@@ -29,7 +30,9 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Kontakt</a>
         </li>
-
+        <li class="nav-item">
+          <a class="nav-link" href="add_car.php">Admin</a>
+        </li>
       </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Otsi..." aria-label="Search" name="search">
@@ -64,10 +67,13 @@ $id = $_GET["id"];
           <li><strong>Mootor: <?php echo $rida[3]; ?></strong></li>
           <li><strong>Kütus:<?php echo $rida[4]; ?></strong></li>
           <li><strong>Käigukast:<?php echo $rida[8]; ?></strong></li>
-          <li><strong>Kohad:</strong> 5</li>
+          <li><strong>Kohad:<?php echo $rida[9]; ?></strong></li>
+          <li><strong>Aasta:<?php echo $rida[7]; ?></strong></li>
+          <li><strong>Description:<?php echo $rida[10]; ?></strong></li>
+          <li><strong>Status:<?php echo $rida[11]; ?></strong></li>
         </ul>
 
-        <h4 class="mb-3">269 € / päev</h4>
+        <h4 class="mb-3"><?php echo $rida[5] ; ?>€/päev</h4>
         <button class="btn btn-dark w-100">Rendi</button>
 
       </div>

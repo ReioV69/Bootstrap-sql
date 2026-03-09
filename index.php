@@ -36,6 +36,9 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Kontakt</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="add_car.php">Admin</a>
+        </li>
 
       </ul>
       <form class="d-flex" role="search">
@@ -77,7 +80,7 @@ $paring .= ' LIMIT 8';
 $valjund = mysqli_query($yhendus, $paring);
 // var_dump($valjund);
 
-?>
+?>     
 
 <!-- autode kaardid -->
  <div class="container">
