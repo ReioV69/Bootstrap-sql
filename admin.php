@@ -15,6 +15,14 @@
     </style>
   </head>
   <body>
+    <?php
+session_start();
+if ($_SESSION['tuvastamine'] !== 'Admin') {
+  header('Location: adminlogin.php');
+  exit();
+}
+
+?>
 <!-- menüü -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary  border-bottom">
   <div class="container">
@@ -25,7 +33,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Autod</a>
+          <a class="nav-link active" aria-current="page" href="index.php">Autod</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Reserveeringud</a>
@@ -33,11 +41,16 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Kasutajad</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="adminlogin.php">Login</a>
+        </li>
 
       </ul>
+      <form action="logout.php">
 <div class="d-grid gap-2  d-md-flex justify-content-md-end">
-  <button class="btn btn-outline-secondary me-md-2" type="button">Logout</button>
+  <button class="btn btn-outline-secondary me-md-2" type="submit"></a>Logout</button>
 </div>
+</form>
     </div>
   </div>
 </nav>
@@ -90,8 +103,8 @@ $valjund = mysqli_query($yhendus, $paring);
       <td><?php echo $rida[5]; ?></td>
       <td style="max-width:150px;"><?php echo $rida[10];?></td>
       <td><div class="btn-group d-md-flex justify-content-md-center my-5  ">
-  <button class="btn btn-outline-primary " type="button">Muuda</button>
-<a onclick="return ConfirmDelete()" href="cardelete.php?id=<?php echo $rida[0]; ?>"  class="btn btn-outline-danger">Kustuta</a>
+<a href="carmodify.php?id=<?php echo $rida[0];?>"class="btn btn-outline-primary btn-sm">Muuda</a>
+<a  href="cardelete.php?id=<?php echo $rida[0]; ?>" onclick="return Confirm()" class="btn btn-outline-danger">Kustuta</a>
 </div></td>
       
     </tr>
@@ -105,10 +118,6 @@ $valjund = mysqli_query($yhendus, $paring);
 </div>
 </div>
 
-<script>
-  function ConfirmDelete()
-{
-  return confirm("Are you sure you want to delete?");
-}
+
 </script>
 </html>

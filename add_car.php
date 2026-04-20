@@ -15,6 +15,14 @@
     </style>
   </head>
   <body>
+        <?php
+session_start();
+if ($_SESSION['tuvastamine'] !== 'Admin') {
+  header('Location: adminlogin.php');
+  exit();
+}
+
+?>
 <!-- menüü -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary  border-bottom">
   <div class="container">
@@ -34,25 +42,29 @@
   <div class="container my-3">
     <div class="row">
 <h4>Lisa auto</h4>
-<form action="add_car.php" method="GET" enctype="multipart/form.data">
+<form action="add_car.php" method="POST" enctype="multipart/form-data">
 <?php
+include("config.php");
+var_dump($_POST);
+// if(!empty($_POST["mark"]) && !empty($_POST["model"]) && !empty($_POST["price"]) && !empty($_POST["engine"]) && !empty($_POST["fuel"]) && !empty($_POST["image"]) && !empty($_POST["year"]) && !empty($_POST["transmission"])&& !empty($_POST["seats"]) && !empty($_POST["description"]) && !empty($_POST["status"])){
 
-  if(!empty($_GET["mark"]) && !empty($_GET["model"]) && !empty($_GET["price"]) && !empty($_GET["engine"]) && !empty($_GET["fuel"]) && !empty($_GET["image"]) && !empty($_GET["year"]) && !empty($_GET["transmission"])&& !empty($_GET["seats"]) && !empty($_GET["description"]) && !empty($_GET["status"])){
-    $mark = $_GET["mark"];
-    $model = $_GET["model"];
-    $price = $_GET["price"];
-    $engine = $_GET["engine"];
-    $fuel = $_GET["fuel"];
-    $image = $_GET["image"];
-    $year = $_GET["year"];
-    $transmission = $_GET["transmission"];
-    $seats = $_GET["seats"];
-    $description = $_GET["descripiton"];
-    $status = $_GET["status"];
+if(!empty($_POST["mark"])){
+    $mark = $_POST["mark"];
+    $model = $_POST["model"];
+    $price = $_POST["price"];
+    $engine = $_POST["engine"];
+    $fuel = $_POST["fuel"];
+    $image = $_POST["image"];
+    $year = $_POST["year"];
+    $transmission = $_POST["transmission"];
+    $seats = $_POST["seats"];
+    $description = $_POST["description"];
+    $status = $_POST["status"];
 
 
-$paring = "INSERT INTO cars (mark, model, engine, fuel, price, image, year, transmission, seats, description, status) 
-VALUES ('".$mark."', '".$model."', '".$engine."', '".$fuel."', '".$price."', '".$image."', '".$year."', '".$transmission."', '".$seats."', '".$description."', '".$status."')";
+$paring = "INSERT INTO `cars`(mark, model, engine, fuel, price, image, year, transmission, seats, description, status) 
+VALUES ('".$mark."', '".$model."', '".$engine."', '".$fuel."', '".$price."', '".$image."', '".$year."', '".$transmission."', '".$seats."', '".$description."','".$status."')";
+var_dump($paring);
 if($result = mysqli_query($yhendus, $paring)) {
   $result = 'Data saved';
    header('Location: admin.php');
@@ -61,9 +73,8 @@ if($result = mysqli_query($yhendus, $paring)) {
 }
 $affected = mysqli_affected_rows($yhendus);
 echo $result . '.'.'Affected rows:'. $affected;
-
- }
-
+  }
+mysqli_close($yhendus);
 ?>
 
 
@@ -159,8 +170,8 @@ echo $result . '.'.'Affected rows:'. $affected;
 </div>
 
 <hr>
-
-<input class="btn btn-dark my-2" type="submit" value="Salvest">
+<form action="add_car.php" method="POST">
+<input class="btn btn-dark my-2" type="Submit" name="insert" value="Insert">
 <input class="btn btn-danger my-2" type="reset" value="Tühista">
 
 </form>

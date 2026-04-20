@@ -5,7 +5,7 @@ $db_kasutaja = 'reio';
 $db_salasona = 'Passw0rd';
 
 // ühendus andmebaasiga
-$yhendus = new mysqli($db_server, $db_kasutaja, $db_salasona, $db_andmebaas);
+$yhendus =  mysqli_connect($db_server, $db_kasutaja, $db_salasona, $db_andmebaas);
 
 // ühenduse kontroll
 if (!$yhendus) {

@@ -39,7 +39,9 @@
         <li class="nav-item">
           <a class="nav-link" href="add_car.php">Admin</a>
         </li>
-
+              <li class="nav-item">
+          <a class="nav-link" href="adminlogin.php">Login</a>
+        </li>
       </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Otsi..." aria-label="Search" name="search">

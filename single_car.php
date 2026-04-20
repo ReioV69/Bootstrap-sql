@@ -11,12 +11,12 @@ include("config.php");
 session_start();
 $id = $_GET["id"];
 
-// võta auto andmed
+
 $paring = "SELECT * FROM cars WHERE id=$id";
 $valjund = mysqli_query($yhendus, $paring);
 $rida = mysqli_fetch_row($valjund);
 
-// --- BRONEERIMINE ---
+
 if(isset($_POST['rent'])){
 
     $user_id = $_SESSION['user_id'];
@@ -30,10 +30,21 @@ if(isset($_POST['rent'])){
 
         $price = $rida[5];
 
-        $days = (strtotime($lopp) - strtotime($algus)) / (60*60*24);
+        $days = (strtotime($lopp) - strtotime($algus)) / (24*60*60);
         $days = max(1, $days);
 
         $total = $days * $price;
+    //https://www.daniweb.com/programming/web-development/threads/479348/room-availability-check-with-date-range
+        $check = "SELECT * FROM Reservation
+        WHERE car_id = '$car_id'
+        AND status IN ('pending','confirmed')
+        AND ('$algus' <= end_date)
+        AND ('$lopp' >= start_date)";
+        $result = mysqli_query($yhendus, $check);
+
+if(mysqli_num_rows($result) > 0){
+    echo "<div class='alert alert-danger'>See auto on juba valitud ajavahemikus broneeritud!</div>";
+} else {
 
         $insert = "INSERT INTO Reservation
         (user_id, car_id, start_date, end_date, total_price, status)
@@ -44,6 +55,7 @@ if(isset($_POST['rent'])){
 
         echo "<div class='alert alert-success'>Broneering tehtud! Hind: $total €</div>";
     }
+}
 }
 ?>
 <body class="bg-light">

@@ -15,6 +15,25 @@
     </style>
   </head>
   <body>
+        <?php
+session_start();
+if ($_SESSION['tuvastamine'] !== 'Admin') {
+  header('Location: adminlogin.php');
+  exit();
+}
+
+?>
+<form method="GET">
+<?php 
+
+if(isset($_GET["id"])){
+    $id = $_GET['id'];
+    $paring = "SELECT * FROM cars WHERE id=$id";
+    $tulemus = mysqli_query($yhendus, $paring);
+    $car = mysqli_fetch_assoc($tulemus);
+}
+  ?>
+  
 <!-- menüü -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary  border-bottom">
   <div class="container">
@@ -34,39 +53,39 @@
   <div class="container my-3">
     <div class="row">
 <h4>Lisa auto</h4>
-<form action="add_car.php" method="GET" enctype="multipart/form.data">
+<form action="carmodify.php" method="GET" enctype="multipart/form-data">
 <?php
 
-  if(!empty($_GET["mark"]) && !empty($_GET["model"]) && !empty($_GET["price"]) && !empty($_GET["engine"]) && !empty($_GET["fuel"]) && !empty($_GET["image"]) && !empty($_GET["year"]) && !empty($_GET["transmission"])&& !empty($_GET["seats"]) && !empty($_GET["description"]) && !empty($_GET["status"])){
-    $mark = $_GET["mark"];
-    $model = $_GET["model"];
-    $price = $_GET["price"];
-    $engine = $_GET["engine"];
-    $fuel = $_GET["fuel"];
-    $image = $_GET["image"];
-    $year = $_GET["year"];
-    $transmission = $_GET["transmission"];
-    $seats = $_GET["seats"];
-    $description = $_GET["descripiton"];
-    $status = $_GET["status"];
-  }
+if(isset($_GET['id'])){
+      $id = $_GET["id"];
+      $mark = $_GET['mark'];
+      $model = $_GET['model'];
+      $engine = $_GET['engine'];
+      $fuel = $_GET['fuel'];
+      $price = $_GET['price'];
+      $year = $_GET['year'];
+      $transmission = $_GET['transmission'];
+      $seats = $_GET['seats'];
+      $description = $_GET['description'];
+      $status = $_GET['status'];
 
-$paring = "UPDATE cars SET (mark, model, engine, fuel, price, image, year, transmission, seats, description, status) 
-VALUES ('".$mark."', '".$model."', '".$engine."', '".$fuel."', '".$price."', '".$image."', '".$year."', '".$transmission."', '".$seats."', '".$description."', '".$status."')";
+      $paring = "UPDATE cars SET mark = '".$mark."', model = '".$model."', engine = '".$engine."', fuel = '".$fuel."', price = '".$price."', year = '".$year."', transmission = '".$transmission."', seats = '".$seats."', description = '".$description."', status = '".$status."' WHERE cars.id = ".$id."";
+
 $valjund = mysqli_query($yhendus, $paring);
-
-
-
+ $tulemus = mysqli_affected_rows($yhendus);
+}
 ?>
 
 
         <div class="d-grid btn-group  my-2 justify-content-md-end">
   <button onclick="window.location.href='index.php';"class="btn btn-outline-secondary me-4" type="button">Tagasi</button>
 </div>
+
+
     <div class="row">
  
 
-
+<input type="hidden" name="id" value="<?=$car['id'];?>">
 <div class="card">
 <div class="container bordered-tertiary ">
 
@@ -80,27 +99,27 @@ $valjund = mysqli_query($yhendus, $paring);
 
 <div class="col-md-6 mb-3">
 <label class="form-label">Mark</label>
-<input type="text" class="form-control" name="model" required>
+<input type="text" class="form-control" id="mark" name="mark" value="<?=$car['mark'];  ?>" required>
 </div>
 
 
 
 
 <div class="col-md-6 mb-3">
-<label class="form-label">Mudel</label>
-<input type="text" class="form-control" name="model" required>
+<label class="form-label">Model</label>
+<input type="text" class="form-control" id="model" name="model" value="<?=$car['model'];  ?>" required>
 </div>
 
 
 <div class="col-md-6 mb-3">
 <label class="form-label">Mootor</label>
-<input type="text" class="form-control" name="engine" required>
+<input type="text" class="form-control" id="engine" name="engine" value="<?=$car['engine'];  ?>" required>
 </div>
 
 
 <div class="col-md-6 mb-3">
-<label class="form-label">Kütus</label>
-<select class="form-select" name="fuel" required>
+<label class="form-label">Fuel</label>
+<select class="form-select" name="fuel" id="fuel" value="<?=$car['fuel'];  ?>" required>
 <option selected>Vali</option>
 <option>Bensiin</option>
 <option>Diisel</option>
@@ -112,43 +131,44 @@ $valjund = mysqli_query($yhendus, $paring);
 
 <div class="col-md-6 mb-3">
 <label class="form-label">Hind (€ / päev)</label>
-<input type="number" class="form-control" name="price" required>
+<input type="number" class="form-control" id="price" name="price" value="<?=$car['price'];  ?>" required>
 </div>
 <div class="col-md-6 mb-3">
 <label class="form-label">Aasta</label>
-<input type="text" class="form-control" name="year" required>
+<input type="number" class="form-control" id="year" name="year" value="<?=$car['year'];  ?>" required>
 </div>
 
 <div class="col-md-6 mb-3">
 <label class="form-label">Käigukast</label>
-<select class="form-select" name="transmission" required>
+<input type="text" name="transmission" id="transmission" value="<?=$car['transmission'];  ?>" required>
 <option selected>Vali</option>
 <option>Automaat</option>
 <option>Manuaal</option>
 <option>CVT</option>
-</select>
+</input>
 </div>
 
 <div class="col-md-6 mb-3">
 <label class="form-label">Istekohad</label>
-<input type="number" min="1" max="8" class="form-control" name="seats" required>
+<input type="number" min="1" max="8" id="seats" class="form-control" name="seats" value="<?=$car['seats'];  ?>" required>
 </div>
 <div class="col-md-6 mb-3">
 <label class="form-label">Description</label>
-<input type="text" class="form-control" name="descripiton" required>
+<input type="text" class="form-control"  id="description" name="description"  value="<?=$car['description'];  ?>" required>
 </div>
 <div class="col-md-6 mb-3">
 <label class="form-label">status</label>
-<select class="form-select" name="status" required>
-<option selected>Vali</option>
-<option>Vaba</option>
-<option>Renditud</option>
-<option>Hoolduses</option>
-</select>
+<input type="text" name="status" id="status" value="<?=$car['status'];  ?> " required>
+
+<option>vaba</option>
+<option>hoolduses</option>
+<option>rendidud</option>
+
+</input>
 </div>
 <div class="col-md-6 mb-3">
 <label class="form-label">Auto pilt</label>
-<input type="file" class="form-control"  name="image" required>
+<input type="file" class="form-control" id="image" name="image" value="<?=$car['image'];  ?>" required>
 <small class="text-muted">Lubatud formaadid: JPG, PNG, WEBP</small>
 </div>
 
@@ -156,10 +176,9 @@ $valjund = mysqli_query($yhendus, $paring);
 
 <hr>
 
-<input class="btn btn-dark my-2" type="submit" value="Salvest">
+<input class="btn btn-dark my-2" type="submit" class="btn btn-success" value="Salvesta">
 <input class="btn btn-danger my-2" type="reset" value="Tühista">
 
-</form>
 
 </div>
 </form>
