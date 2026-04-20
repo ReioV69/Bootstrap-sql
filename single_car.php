@@ -3,92 +3,103 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Auto d</title>
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"></head>
+  <title>Auto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<?php
+include("config.php");
+session_start();
+$id = $_GET["id"];
+
+// võta auto andmed
+$paring = "SELECT * FROM cars WHERE id=$id";
+$valjund = mysqli_query($yhendus, $paring);
+$rida = mysqli_fetch_row($valjund);
+
+// --- BRONEERIMINE ---
+if(isset($_POST['rent'])){
+
+    $user_id = $_SESSION['user_id'];
+    $car_id = $_POST['car_id'];
+    $algus = $_POST['date'];
+    $lopp = $_POST['date1'];
+
+    if($lopp < $algus){
+        echo "<div class='alert alert-danger'>Vale kuupäev!</div>";
+    } else {
+
+        $price = $rida[5];
+
+        $days = (strtotime($lopp) - strtotime($algus)) / (60*60*24);
+        $days = max(1, $days);
+
+        $total = $days * $price;
+
+        $insert = "INSERT INTO Reservation
+        (user_id, car_id, start_date, end_date, total_price, status)
+        VALUES
+        ('$user_id','$car_id','$algus','$lopp','$total','pending')";
+
+        mysqli_query($yhendus, $insert);
+
+        echo "<div class='alert alert-success'>Broneering tehtud! Hind: $total €</div>";
+    }
+}
+?>
 <body class="bg-light">
 
-<!-- NAVBAR -->
- 
-  <nav class="navbar navbar-expand-lg bg-body-tertiary  border-bottom">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#">Autorent</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Avaleht</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Autod</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Hinnad</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Kontakt</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="add_car.php">Admin</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Otsi..." aria-label="Search" name="search">
-        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
-      </form>
-    </div>
-  </div>
-</nav>
-
-<!-- SISU -->
- <?php
- require_once "config.php";
-$id = $_GET["id"];
-  $paring = 'SELECT * FROM cars WHERE id='.$id.' ';
-  $valjund = mysqli_query($yhendus, $paring);
-  $rida = mysqli_fetch_row($valjund); 
-
-?>
 <div class="container my-5">
 
- <div class="card shadow-sm">
-  <div class="row g-0">
+<div class="card shadow-sm">
+<div class="row">
 
-    <!-- Info -->
-    <div class="col-md-6">
-      <div class="card-body p-4">
+<div class="col-md-6 p-4">
 
-        <h3><?php echo($rida[1]. "<br>")  ?></h3>
-        <p class="text-muted mb-4"><?php echo($rida[2]. "<br>")  ?></p>
+<h3><?php echo $rida[1]; ?></h3>
+<p class="text-muted"><?php echo $rida[2]; ?></p>
 
-        <ul class="list-unstyled mb-4">
-          <li><strong>Mootor: <?php echo $rida[3]; ?></strong></li>
-          <li><strong>Kütus:<?php echo $rida[4]; ?></strong></li>
-          <li><strong>Käigukast:<?php echo $rida[8]; ?></strong></li>
-          <li><strong>Kohad:<?php echo $rida[9]; ?></strong></li>
-          <li><strong>Aasta:<?php echo $rida[7]; ?></strong></li>
-          <li><strong>Description:<?php echo $rida[10]; ?></strong></li>
-          <li><strong>Status:<?php echo $rida[11]; ?></strong></li>
-        </ul>
+<ul>
+<li>Mootor: <?php echo $rida[3]; ?></li>
+<li>Kütus: <?php echo $rida[4]; ?></li>
+<li>Käigukast: <?php echo $rida[8]; ?></li>
+<li>Kohad: <?php echo $rida[9]; ?></li>
+<li>Aasta: <?php echo $rida[7]; ?></li>
+<li><?php echo $rida[10]; ?></li>
+<li>Status: <?php echo $rida[11]; ?></li>
+</ul>
 
-        <h4 class="mb-3"><?php echo $rida[5] ; ?>€/päev</h4>
-        <button class="btn btn-dark w-100">Rendi</button>
+<h4><?php echo $rida[5]; ?> €/päev</h4>
 
-      </div>
-    </div>
-    <!-- Pilt -->
-    <div class="col-md-6">
-      <img src="https://loremflickr.com/800/500/audi"
-           class="img-fluid h-100 object-fit-cover rounded-start"
-           alt="Auto pilt">
-    </div>
+<form method="POST">
 
-  </div>
+<input type="hidden" name="car_id" value="<?php echo $rida[0]; ?>">
+
+<p>
+<label>Algus kuupäev</label>
+<input type="date" name="date" required>
+</p>
+
+<p>
+<label>Lõpp kuupäev</label>
+<input type="date" name="date1" required>
+</p>
+
+<button class="btn btn-dark w-100" type="submit" name="rent">
+Rendi
+</button>
+
+</form>
+
 </div>
 
+<div class="col-md-6">
+<img src="https://loremflickr.com/800/500/car" class="img-fluid">
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+</div>
+
+</div>
+
 </body>
 </html>
