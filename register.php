@@ -1,4 +1,6 @@
-<?php
+
+
+<?php // https://www.geeksforgeeks.org/php/creating-a-registration-and-login-system-with-php-and-mysql
 include 'config.php';
 
 $message = "";
@@ -38,7 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+        <?php
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
         <?php endif; ?>
+
         <form method="post" class="form-control mt-5 p-4"
             style="height:auto; width:380px;
             box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
